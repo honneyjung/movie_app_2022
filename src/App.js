@@ -1,55 +1,26 @@
 import React from "react";
 import axios from "axios";
-import Movie from "./Movie";
+import {HashRouter, Route} from "react-router-dom";   // import 다음 복수컨퍼넌트를 불러올땐 {}안에쓰기
+import Home from "./routes/Home";
+import About from "./routes/About";
+
+
 import "./App.css";
-import "./movie.css";
+import Navigation from "./components/Navigation";
 
-class App extends React.Component {
-  state = {
-    isLoading: true,
-    movies: [],
-  };
-  getMovies = async () => {
-    const {
-      data: {
-        data: { movies },
-      },
-    } = await axios.get(
-      "https://yts-proxy.now.sh/list_movies.json?sort_by=rating"
-    );
-    this.setState({ movies, isLoading: false });
-  };
+/*
+  Route path: 이동할 경로
+  홈 화면에서 exact={true} 를 써줘야 다음 페이지들에서 홈 화면이 중복으로 뜨는걸 방지할수있음
+*/
 
-  componentDidMount() {
-    this.getMovies();
-  }
-  render() {
-    const { isLoading, movies } = this.state;
-
-    return (
-      <section className="container">
-        {isLoading ? (
-          <div className="loader">
-            <span className="loader__text">'로딩중...'</span>
-          </div>
-        ) : (
-          <div className="movies">
-            {movies.map((movie) =>  (
-                <Movie
-                  key={movie.id}
-                  id={movie.id}
-                  year={movie.year}
-                  title={movie.title}
-                  summary={movie.summary}
-                  poster={movie.medium_cover_image}
-                  genres={movie.genres}
-                />
-            ))};
-          </div>
-          )
-        }
-      </section>
-    );
-  }
+function App() {
+  return(
+    <HashRouter>
+      <Navigation />
+      <Route path="/" exact={true} component={Home} />
+      <Route path="/about" component={About} />
+    </HashRouter>
+  )
 }
+
 export default App;
